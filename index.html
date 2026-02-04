@@ -13,214 +13,305 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Be My Valentine 💜</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💜</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Pacifico&display=swap" rel="stylesheet">
+<!-- Handwritten but readable font -->
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e6d9ff, #d1b3ff);
+  height: 100vh;
+  font-family: 'Patrick Hand', cursive;
+  background: linear-gradient(135deg, #d8c7f7, #f3e8ff);
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  font-family: 'Playfair Display', serif;
   overflow: hidden;
+  color: #3b235f;
 }
 
-.container {
-  background: rgba(255,255,255,0.9);
-  padding: 30px;
-  border-radius: 20px;
-  width: 90%;
+.screen {
+  text-align: center;
+  padding: 20px;
+  width: 100%;
   max-width: 420px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
-h1 {
-  font-family: 'Pacifico', cursive;
-  color: #7a3db8;
+.hidden {
+  display: none;
+}
+
+h1, h2 {
+  margin-bottom: 20px;
 }
 
 button {
-  padding: 15px 25px;
-  font-size: 18px;
+  padding: 14px 24px;
+  margin: 10px;
+  font-size: 1.2rem;
   border-radius: 30px;
   border: none;
   cursor: pointer;
-  margin: 10px;
 }
 
-.yes { background: #9b5de5; color: white; }
-.no { background: #ff595e; color: white; }
-
-.hidden { display: none; }
-
-img {
-  max-width: 100%;
-  border-radius: 15px;
+#yesBtn {
+  background: #ec4899;
+  color: white;
 }
 
-/* Heart animation */
-#heart {
-  font-size: 80px;
-  animation: grow 1.5s ease forwards;
+#noBtn {
+  background: #eee;
 }
 
-@keyframes grow {
+/* HEART BALLOON */
+#balloon {
+  font-size: 120px;
+  animation: inflate 4s forwards;
+}
+
+@keyframes inflate {
   0% { transform: scale(1); }
-  80% { transform: scale(2.5); }
-  100% { transform: scale(0); }
+  100% { transform: scale(6); opacity: 0; }
 }
 
-/* Tomatoes */
+/* QUIZ */
+.option {
+  display: block;
+  width: 100%;
+  background: #f3e8ff;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 30px;
+  font-size: 1.1rem;
+}
+
+/* HEART PROGRESS BAR */
+.progress-container {
+  position: fixed;
+  bottom: 20px;
+  width: 80%;
+  max-width: 300px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.heart {
+  font-size: 24px;
+  opacity: 0.2;
+}
+
+.heart.active {
+  opacity: 1;
+}
+
+/* TOMATO */
 .tomato {
   position: absolute;
+  font-size: 40px;
+  animation: splat 0.6s forwards;
+}
+
+@keyframes splat {
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* PEONIES */
+.peony {
+  position: fixed;
+  top: -50px;
   font-size: 30px;
-  animation: fall 1s linear forwards;
+  animation: fall 4s linear forwards;
 }
 
 @keyframes fall {
-  from { transform: translateY(-100px); }
-  to { transform: translateY(600px); opacity: 0; }
+  to {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+
+img {
+  max-width: 100%;
+  border-radius: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- SCREEN 1 -->
-<div class="container" id="screen1">
-  <h1>Will you be my Valentine? 💜</h1>
-  <button class="yes" onclick="yes()">Yes 💖</button>
-  <button class="no" onclick="no()">No ❌</button>
+<!-- START SCREEN -->
+<div class="screen" id="start">
+  <h1>Elisabeth Cipus 💜<br>Will you be my Valentine?</h1>
+  <button id="yesBtn">YES</button>
+  <button id="noBtn">NO</button>
 </div>
 
-<!-- SCREEN 2 -->
-<div class="container hidden" id="screen2">
+<!-- YES IMAGE -->
+<div class="screen hidden" id="yesScene">
   <img src="https://i.imgur.com/cotL6e6.jpeg">
-  <div id="heart">🎈❤️</div>
+  <h2>I love you 💜</h2>
+  <div id="balloon">🎈❤️</div>
 </div>
 
-<!-- SCREEN 3 -->
-<div class="container hidden" id="screen3">
-  <h1>Before the details… ✨</h1>
-  <p>
-    In order to receive details about our date,<br>
-    you must answer the following questions all correct.
-  </p>
-  <button class="yes" onclick="startQuiz()">Continue 💫</button>
+<!-- QUIZ INTRO -->
+<div class="screen hidden" id="quizIntro">
+  <h2>To receive details about our date…</h2>
+  <p>You must answer all questions correctly 💕</p>
+  <button onclick="startQuiz()">Start</button>
 </div>
 
 <!-- QUIZ -->
-<div class="container hidden" id="quiz">
-  <img src="https://i.imgur.com/lzXR1Zd.jpeg">
-  <div id="question"></div>
-  <div id="answers"></div>
+<div class="screen hidden" id="quiz">
+  <h2 id="question"></h2>
+  <div id="options"></div>
+
+  <div class="progress-container" id="progress"></div>
 </div>
 
-<!-- FINAL -->
-<div class="container hidden" id="final">
-  <h1>💌 You’re Invited 💌</h1>
-  <p><strong>February 13th</strong></p>
-  <p><strong>7:00 PM</strong></p>
-  <p><strong>Attire:</strong> Dress to Impress ✨</p>
-  <p><strong>Location:</strong> A Surprise 😏</p>
+<!-- INVITE -->
+<div class="screen hidden" id="invite">
+  <h1>You’re Invited 💜</h1>
+  <p>📅 February 13th</p>
+  <p>⏰ 7:00 PM</p>
+  <p>👗 Dress to Impress</p>
+  <p>📍 Location: A Surprise</p>
 </div>
+
+<!-- NO SCREEN -->
+<div class="screen hidden" id="noScene">
+  <img src="https://i.imgur.com/lzXR1Zd.jpeg">
+  <h1 id="noText"></h1>
+</div>
+
+<audio id="splat" src="https://www.myinstants.com/media/sounds/splat.mp3"></audio>
 
 <script>
-let qIndex = 0;
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
 
+yesBtn.onclick = () => {
+  start.classList.add("hidden");
+  yesScene.classList.remove("hidden");
+
+  setTimeout(() => {
+    yesScene.classList.add("hidden");
+    quizIntro.classList.remove("hidden");
+  }, 4000);
+};
+
+noBtn.onclick = () => {
+  start.classList.add("hidden");
+  noScene.classList.remove("hidden");
+
+  let count = 0;
+  const splat = document.getElementById("splat");
+
+  const interval = setInterval(() => {
+    splat.currentTime = 0;
+    splat.play();
+
+    const t = document.createElement("div");
+    t.className = "tomato";
+    t.textContent = "🍅";
+    t.style.left = Math.random() * 90 + "%";
+    t.style.top = Math.random() * 80 + "%";
+    document.body.appendChild(t);
+
+    setTimeout(() => t.remove(), 600);
+    count++;
+
+    if (count === 25) {
+      clearInterval(interval);
+      noText.textContent = "FUCK NO TRY AGAIN";
+      document.body.style.background = "#7f1d1d";
+      setTimeout(() => location.reload(), 2000);
+    }
+  }, 200);
+};
+
+/* QUIZ DATA */
 const quizData = [
-  {
-    q: "When is our anniversary?",
-    a: ["October 17th", "October 18th", "October 19th", "October 20th"],
-    c: "October 19th"
-  },
-  {
-    q: "What is my favorite color?",
-    a: ["Dark green", "Blue", "Turquoise", "Sage green"],
-    c: "Sage green"
-  },
-  {
-    q: "Why did we reschedule our first official date?",
-    a: ["You went out of town", "I had work", "Something came up", "I was sick from the flu shot"],
-    c: "I was sick from the flu shot"
-  },
-  {
-    q: "What did I do to show I was serious?",
-    a: ["Rescheduled", "Apologized", "Did nothing", "Sent you flowers"],
-    c: "Sent you flowers"
-  }
+  ["When is our anniversary?", "October 19th",
+    ["October 17th", "October 18th", "October 19th", "October 20th"]],
+  ["What is my favorite color?", "Sage Green",
+    ["Dark Green", "Blue", "Turquoise", "Sage Green"]],
+  ["Why did we reschedule our first official date?",
+    "I was sick because of the flu shot",
+    ["You went out of town", "I had work", "Something came up", "I was sick because of the flu shot"]],
+  ["What did I do to show I was serious?",
+    "I sent you flowers to your house",
+    ["I rescheduled", "I apologized", "I did nothing", "I sent you flowers to your house"]]
 ];
 
-function yes() {
-  document.getElementById("screen1").classList.add("hidden");
-  document.getElementById("screen2").classList.remove("hidden");
-
-  setTimeout(() => {
-    document.getElementById("screen2").classList.add("hidden");
-    document.getElementById("screen3").classList.remove("hidden");
-  }, 1800);
-}
-
-function no() {
-  for (let i = 0; i < 15; i++) {
-    let t = document.createElement("div");
-    t.className = "tomato";
-    t.innerText = "🍅";
-    t.style.left = Math.random()*100 + "vw";
-    document.body.appendChild(t);
-    setTimeout(()=>t.remove(),1000);
-  }
-  setTimeout(() => {
-    alert("❌ FUCK NO ❌");
-    location.reload();
-  }, 900);
-}
+let index = 0;
 
 function startQuiz() {
-  document.getElementById("screen3").classList.add("hidden");
-  document.getElementById("quiz").classList.remove("hidden");
-  loadQuestion();
+  quizIntro.classList.add("hidden");
+  quiz.classList.remove("hidden");
+  renderQuestion();
 }
 
-function loadQuestion() {
-  let q = quizData[qIndex];
-  document.getElementById("question").innerHTML = `<h3>${q.q}</h3>`;
-  document.getElementById("answers").innerHTML =
-    q.a.map(a => `<button onclick="check('${a}')">${a}</button>`).join("<br>");
+function renderQuestion() {
+  question.textContent = quizData[index][0];
+  options.innerHTML = "";
+  progress.innerHTML = "";
+
+  quizData[index][2].forEach(opt => {
+    const b = document.createElement("button");
+    b.className = "option";
+    b.textContent = opt;
+    b.onclick = () => {
+      if (opt === quizData[index][1]) {
+        index++;
+        if (index < quizData.length) renderQuestion();
+        else textQuestion();
+      }
+    };
+    options.appendChild(b);
+  });
+
+  for (let i = 0; i < quizData.length + 1; i++) {
+    const h = document.createElement("div");
+    h.className = "heart" + (i <= index ? " active" : "");
+    h.textContent = "💜";
+    progress.appendChild(h);
+  }
 }
 
-function check(a) {
-  if (a === quizData[qIndex].c) {
-    qIndex++;
-    if (qIndex < quizData.length) {
-      loadQuestion();
-    } else {
-      soda();
-    }
-  } else alert("Wrong 😈 try again");
+function textQuestion() {
+  question.textContent = "What is my favorite soda?";
+  options.innerHTML = `
+    <input id="txt" placeholder="Type here…" style="padding:12px;border-radius:20px;width:80%">
+    <br><br>
+    <button onclick="checkText()">Submit</button>
+  `;
 }
 
-function soda() {
-  document.getElementById("question").innerHTML = "<h3>What is my favorite soda?</h3>";
-  document.getElementById("answers").innerHTML =
-    `<input id="soda"><br><button onclick="checkSoda()">Submit</button>`;
-}
+function checkText() {
+  if (txt.value.trim().toLowerCase() === "diet sunkist") {
+    quiz.classList.add("hidden");
+    invite.classList.remove("hidden");
 
-function checkSoda() {
-  let v = document.getElementById("soda").value.toLowerCase().trim();
-  if (v === "diet sunkist") {
-    document.getElementById("quiz").classList.add("hidden");
-    document.getElementById("final").classList.remove("hidden");
-  } else alert("Nope 😭");
+    setInterval(() => {
+      const p = document.createElement("div");
+      p.className = "peony";
+      p.textContent = "🌸";
+      p.style.left = Math.random() * 100 + "vw";
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 4000);
+    }, 150);
+  }
 }
 </script>
-
 </body>
 </html>
     
