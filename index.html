@@ -1,165 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Valentine 💜</title>
+<title>Be My Valentine 💜</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #c6b7e2, #e6d9ff);
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e6d9ff, #d1b3ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  overflow: hidden;
+}
 
-  .card {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,.2);
-  }
+.container {
+  background: rgba(255,255,255,0.9);
+  padding: 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
 
-  h1 {
-    margin-bottom: 30px;
-  }
+h1 {
+  font-family: 'Pacifico', cursive;
+  color: #7a3db8;
+}
 
-  button {
-    width: 120px;
-    height: 120px;
-    font-size: 22px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    margin: 10px;
-  }
+button {
+  padding: 15px 25px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+}
 
-  #yes {
-    background: hotpink;
-    color: white;
-  }
+.yes { background: #9b5de5; color: white; }
+.no { background: #ff595e; color: white; }
 
-  #no {
-    background: lightgray;
-    color: black;
-  }
+.hidden { display: none; }
 
-  #no.locked {
-    background: red;
-    color: white;
-    cursor: not-allowed;
-  }
+img {
+  max-width: 100%;
+  border-radius: 15px;
+}
 
-  /* SCENES */
-  .scene {
-    position: fixed;
-    inset: 0;
-    background: #d8c8ff;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
-  }
+/* Heart animation */
+#heart {
+  font-size: 80px;
+  animation: grow 1.5s ease forwards;
+}
 
-  .scene img {
-    max-width: 320px;
-    border-radius: 20px;
-    margin-bottom: 20px;
-  }
+@keyframes grow {
+  0% { transform: scale(1); }
+  80% { transform: scale(2.5); }
+  100% { transform: scale(0); }
+}
 
-  /* BALLOON */
-  .balloon {
-    width: 120px;
-    height: 160px;
-    background: pink;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 48px;
-    transition: transform 4s ease;
-  }
+/* Tomatoes */
+.tomato {
+  position: absolute;
+  font-size: 30px;
+  animation: fall 1s linear forwards;
+}
 
-  .pop {
-    animation: pop 0.4s forwards;
-  }
-
-  @keyframes pop {
-    to {
-      transform: scale(0);
-      opacity: 0;
-    }
-  }
+@keyframes fall {
+  from { transform: translateY(-100px); }
+  to { transform: translateY(600px); opacity: 0; }
+}
 </style>
 </head>
 
 <body>
 
-<!-- START SCREEN -->
-<div class="card" id="start">
-  <h1>Elisabeth Cipus,<br>will you be my Valentine? 💜</h1>
-  <button id="yes">YES</button>
-  <button id="no">NO</button>
+<!-- SCREEN 1 -->
+<div class="container" id="screen1">
+  <h1>Will you be my Valentine? 💜</h1>
+  <button class="yes" onclick="yes()">Yes 💖</button>
+  <button class="no" onclick="no()">No ❌</button>
 </div>
 
-<!-- YES SCENE -->
-<div class="scene" id="yesScene">
+<!-- SCREEN 2 -->
+<div class="container hidden" id="screen2">
   <img src="https://i.imgur.com/cotL6e6.jpeg">
-  <div style="display:flex; align-items:center; gap:20px;">
-    <h1 id="loveText">I love you</h1>
-    <div class="balloon" id="balloon">❤️</div>
-  </div>
+  <div id="heart">🎈❤️</div>
 </div>
 
-<!-- NO SCENE -->
-<div class="scene" id="noScene">
+<!-- SCREEN 3 -->
+<div class="container hidden" id="screen3">
+  <h1>Before the details… ✨</h1>
+  <p>
+    In order to receive details about our date,<br>
+    you must answer the following questions all correct.
+  </p>
+  <button class="yes" onclick="startQuiz()">Continue 💫</button>
+</div>
+
+<!-- QUIZ -->
+<div class="container hidden" id="quiz">
   <img src="https://i.imgur.com/lzXR1Zd.jpeg">
-  <h2>Why did you even click this one?</h2>
-  <p>Go back and try again.</p>
+  <div id="question"></div>
+  <div id="answers"></div>
+</div>
+
+<!-- FINAL -->
+<div class="container hidden" id="final">
+  <h1>💌 You’re Invited 💌</h1>
+  <p><strong>February 13th</strong></p>
+  <p><strong>7:00 PM</strong></p>
+  <p><strong>Attire:</strong> Dress to Impress ✨</p>
+  <p><strong>Location:</strong> A Surprise 😏</p>
 </div>
 
 <script>
-  const yesBtn = document.getElementById("yes");
-  const noBtn = document.getElementById("no");
-  const start = document.getElementById("start");
-  const yesScene = document.getElementById("yesScene");
-  const noScene = document.getElementById("noScene");
-  const balloon = document.getElementById("balloon");
-  const loveText = document.getElementById("loveText");
+let qIndex = 0;
 
-  // YES FLOW
-  yesBtn.onclick = () => {
-    start.style.display = "none";
-    yesScene.style.display = "flex";
+const quizData = [
+  {
+    q: "When is our anniversary?",
+    a: ["October 17th", "October 18th", "October 19th", "October 20th"],
+    c: "October 19th"
+  },
+  {
+    q: "What is my favorite color?",
+    a: ["Dark green", "Blue", "Turquoise", "Sage green"],
+    c: "Sage green"
+  },
+  {
+    q: "Why did we reschedule our first official date?",
+    a: ["You went out of town", "I had work", "Something came up", "I was sick from the flu shot"],
+    c: "I was sick from the flu shot"
+  },
+  {
+    q: "What did I do to show I was serious?",
+    a: ["Rescheduled", "Apologized", "Did nothing", "Sent you flowers"],
+    c: "Sent you flowers"
+  }
+];
 
-    setTimeout(() => {
-      balloon.style.transform = "scale(4)";
-      loveText.style.transform = "translateX(-200vw)";
-    }, 500);
+function yes() {
+  document.getElementById("screen1").classList.add("hidden");
+  document.getElementById("screen2").classList.remove("hidden");
 
-    setTimeout(() => {
-      balloon.classList.add("pop");
-    }, 4500);
-  };
+  setTimeout(() => {
+    document.getElementById("screen2").classList.add("hidden");
+    document.getElementById("screen3").classList.remove("hidden");
+  }, 1800);
+}
 
-  // NO FLOW
-  noBtn.onclick = () => {
-    start.style.display = "none";
-    noScene.style.display = "flex";
+function no() {
+  for (let i = 0; i < 15; i++) {
+    let t = document.createElement("div");
+    t.className = "tomato";
+    t.innerText = "🍅";
+    t.style.left = Math.random()*100 + "vw";
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(),1000);
+  }
+  setTimeout(() => {
+    alert("❌ FUCK NO ❌");
+    location.reload();
+  }, 900);
+}
 
-    setTimeout(() => {
-      noScene.style.display = "none";
-      start.style.display = "block";
-      noBtn.classList.add("locked");
-      noBtn.disabled = true;
-    }, 2500);
-  };
+function startQuiz() {
+  document.getElementById("screen3").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  let q = quizData[qIndex];
+  document.getElementById("question").innerHTML = `<h3>${q.q}</h3>`;
+  document.getElementById("answers").innerHTML =
+    q.a.map(a => `<button onclick="check('${a}')">${a}</button>`).join("<br>");
+}
+
+function check(a) {
+  if (a === quizData[qIndex].c) {
+    qIndex++;
+    if (qIndex < quizData.length) {
+      loadQuestion();
+    } else {
+      soda();
+    }
+  } else alert("Wrong 😈 try again");
+}
+
+function soda() {
+  document.getElementById("question").innerHTML = "<h3>What is my favorite soda?</h3>";
+  document.getElementById("answers").innerHTML =
+    `<input id="soda"><br><button onclick="checkSoda()">Submit</button>`;
+}
+
+function checkSoda() {
+  let v = document.getElementById("soda").value.toLowerCase().trim();
+  if (v === "diet sunkist") {
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("final").classList.remove("hidden");
+  } else alert("Nope 😭");
+}
 </script>
 
 </body>
+</html>
+    
+  </body>
+  
 </html>
