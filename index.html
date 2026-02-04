@@ -12,185 +12,166 @@
   <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Valentine 💜</title>
+<meta charset="UTF-8">
+<title>Valentine 💜</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #c6b7e2, #e6d9ff);
-      font-family: "Poppins", Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #3b235f;
-      overflow: hidden;
-    }
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #c6b7e2, #e6d9ff);
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
 
-    .card {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(10px);
-      padding: 40px 50px;
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      position: relative;
-    }
+  .card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,.2);
+  }
 
-    h1 {
-      font-size: 2.3rem;
-      margin-bottom: 30px;
-    }
+  h1 {
+    margin-bottom: 30px;
+  }
 
-    .buttons {
-      display: flex;
-      gap: 40px;
-      justify-content: center;
-      position: relative;
-    }
+  button {
+    width: 120px;
+    height: 120px;
+    font-size: 22px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 10px;
+  }
 
-    button {
-      width: 130px;
-      height: 130px;
-      border-radius: 20px;
-      border: none;
-      font-size: 1.3rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative;
-    }
+  #yes {
+    background: hotpink;
+    color: white;
+  }
 
-    #yesBtn {
-      background: linear-gradient(135deg, #ff7ac8, #ffb6e6);
-      color: white;
-      box-shadow: 0 10px 30px rgba(255, 122, 200, 0.5);
-    }
+  #no {
+    background: lightgray;
+    color: black;
+  }
 
-    #yesBtn:hover {
-      transform: scale(1.08);
-    }
+  #no.locked {
+    background: red;
+    color: white;
+    cursor: not-allowed;
+  }
 
-    #noBtn {
-      background: #eee;
-      color: #444;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      position: absolute;
-      right: -180px;
-    }
+  /* SCENES */
+  .scene {
+    position: fixed;
+    inset: 0;
+    background: #d8c8ff;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
 
-    .fireworks {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      display: none;
-    }
+  .scene img {
+    max-width: 320px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
 
-    .firework {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      animation: explode 1s ease-out forwards;
-    }
+  /* BALLOON */
+  .balloon {
+    width: 120px;
+    height: 160px;
+    background: pink;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    transition: transform 4s ease;
+  }
 
-    @keyframes explode {
-      0% {
-        transform: scale(0);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(6);
-        opacity: 0;
-      }
-    }
+  .pop {
+    animation: pop 0.4s forwards;
+  }
 
-    .no-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      z-index: 10;
-      color: red;
+  @keyframes pop {
+    to {
+      transform: scale(0);
+      opacity: 0;
     }
-
-    .no-overlay .x {
-      font-size: 10rem;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .no-overlay p {
-      font-size: 2.5rem;
-      margin-top: 10px;
-      font-weight: 700;
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
-  <div class="card">
-    <h1>Elisabeth Cipus,<br>will you be my Valentine? 💜</h1>
 
-    <div class="buttons">
-      <button id="yesBtn">YES</button>
-      <button id="noBtn">NO</button>
-    </div>
+<!-- START SCREEN -->
+<div class="card" id="start">
+  <h1>Elisabeth Cipus,<br>will you be my Valentine? 💜</h1>
+  <button id="yes">YES</button>
+  <button id="no">NO</button>
+</div>
+
+<!-- YES SCENE -->
+<div class="scene" id="yesScene">
+  <img src="https://i.imgur.com/cotL6e6.jpeg">
+  <div style="display:flex; align-items:center; gap:20px;">
+    <h1 id="loveText">I love you</h1>
+    <div class="balloon" id="balloon">❤️</div>
   </div>
+</div>
 
-  <!-- Fireworks -->
-  <div class="fireworks" id="fireworks"></div>
+<!-- NO SCENE -->
+<div class="scene" id="noScene">
+  <img src="https://i.imgur.com/lzXR1Zd.jpeg">
+  <h2>Why did you even click this one?</h2>
+  <p>Go back and try again.</p>
+</div>
 
-  <!-- Fuck No Overlay -->
-  <div class="no-overlay" id="noOverlay">
-    <div class="x">✖</div>
-    <p>FUCK NO</p>
-  </div>
+<script>
+  const yesBtn = document.getElementById("yes");
+  const noBtn = document.getElementById("no");
+  const start = document.getElementById("start");
+  const yesScene = document.getElementById("yesScene");
+  const noScene = document.getElementById("noScene");
+  const balloon = document.getElementById("balloon");
+  const loveText = document.getElementById("loveText");
 
-  <script>
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    const fireworks = document.getElementById("fireworks");
-    const noOverlay = document.getElementById("noOverlay");
+  // YES FLOW
+  yesBtn.onclick = () => {
+    start.style.display = "none";
+    yesScene.style.display = "flex";
 
-    // YES = FIREWORKS
-    yesBtn.addEventListener("click", () => {
-      fireworks.style.display = "block";
+    setTimeout(() => {
+      balloon.style.transform = "scale(4)";
+      loveText.style.transform = "translateX(-200vw)";
+    }, 500);
 
-      for (let i = 0; i < 30; i++) {
-        const fw = document.createElement("div");
-        fw.classList.add("firework");
-        fw.style.background =
-          `hsl(${Math.random() * 360}, 100%, 70%)`;
-        fw.style.left = Math.random() * window.innerWidth + "px";
-        fw.style.top = Math.random() * window.innerHeight + "px";
-        fireworks.appendChild(fw);
+    setTimeout(() => {
+      balloon.classList.add("pop");
+    }, 4500);
+  };
 
-        setTimeout(() => fw.remove(), 1000);
-      }
-    });
+  // NO FLOW
+  noBtn.onclick = () => {
+    start.style.display = "none";
+    noScene.style.display = "flex";
 
-    // NO BUTTON RUNS AWAY
-    noBtn.addEventListener("mouseenter", () => {
-      const x = Math.random() * (window.innerWidth - 150);
-      const y = Math.random() * (window.innerHeight - 150);
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-    });
+    setTimeout(() => {
+      noScene.style.display = "none";
+      start.style.display = "block";
+      noBtn.classList.add("locked");
+      noBtn.disabled = true;
+    }, 2500);
+  };
+</script>
 
-    // If somehow clicked → FUCK NO
-    noBtn.addEventListener("click", () => {
-      noOverlay.style.display = "flex";
-      setTimeout(() => {
-        noOverlay.style.display = "none";
-      }, 1500);
-    });
-  </script>
 </body>
 </html>
     
